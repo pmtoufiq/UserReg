@@ -1,0 +1,138 @@
+﻿@using UserRegSample.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string message = ViewBag.Message;
+    List<Country> countries = ViewBag.Countries;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>TypeScript HTML App</title>
+    <link href="CSS/reset.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 col-md-offset-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2>USER REGISTRATION FORM</h2>
+                        <p>regiser here to become a member of our website</p>
+                    </div>
+                    <div class="panel-body">
+                        <form id="userReg" class="form-horizontal" method="post">
+                           
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-12" for="UserName">User Name:</label>
+                                <div class="col-md-9 col-sm-12">
+                                    <input type="text" class="form-control" id="UserName" name="UserName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-12" for="Password">Password:</label>
+                                <div class="col-md-9 col-sm-12">
+                                    <input type="password" class="form-control" id="Password" name="Password">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-12" for="email">Email Id:</label>
+                                <div class="col-md-9 col-sm-12">
+                                    <input type="email" class="form-control" id="email" name="email">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-12" for="DoB">Date of Birth:</label>
+                                <div class="col-md-9 col-sm-12">
+                                    <input type="date" class="form-control" id="DoB" name="DoB">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-12" for="DoB">Country:</label>
+                                <div class="col-md-9 col-sm-12">
+                                    <select id="CountryId" name="CountryId" class="form-control">
+                                        <option value="">Select Country</option>
+                                        @foreach (var country in ViewBag.Countries)
+                                        {
+                                            <option value="@country.CountryId">@country.CountryName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-12" for="DoB">City:</label>
+                                <div class="col-md-9 col-sm-12">
+                                    <select id="CityId" name="CityId" class="form-control">
+                                        <option value="">--select--</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="control-label col-md-5 col-sm-12">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="agreement" value="male" checked> I agree
+                                    </label>
+                                </div>
+                                <div class="control-label col-md-3 col-sm-12">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="agreement" value="female"> I do not agree
+                                    </label>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-md-7 col-sm-12">
+                                    <input type="submit" value="Create New Account" class="btn btn-primary" />
+                                </div>
+                            </div>
+                            @using (Html.BeginForm())
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-actions no-color">
+                                    @Html.ActionLink("View Users", "ViewAllUser")
+                                </div>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @ViewBag.Message
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#CountryId").change(function () {
+                var cntryId = $("#CountryId").val();
+
+                $("#CityId").empty();
+
+                var json = { CountryId: cntryId };
+                $.ajax({
+                    type: "POST",
+                    url: '/User/GetCityByCountryId',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (cities) {
+                        $.each(cities, function (key, value) {
+                            $("#CityId").append('<option value=' + value.CityId + '>' + value.CityName + '</option>');
+                        });
+                    }
+                });
+
+            });
+        });
+    </script>
+
+</body>
+</html>
+

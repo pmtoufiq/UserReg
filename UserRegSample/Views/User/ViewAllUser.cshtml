@@ -1,0 +1,83 @@
+﻿
+@model List<UserRegSample.Models.User>
+@{
+    ViewBag.Title = "ViewAllUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>TypeScript HTML App</title>
+    <link href="CSS/reset.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 col-md-offset-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2>USER REGISTRATION FORM</h2>
+                        <p>regiser here to become a member of our website</p>
+                    </div>
+                    <div class="panel-body">
+                       
+                        <form id="userReg" class="form-horizontal" method="post">
+                            <h2>User Details</h2>
+                            @using (Html.BeginForm())
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-actions no-color">
+                                    @Html.ActionLink("Add New", "Index")
+                                </div>
+                            }
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center table-style" hidden>Name</th>
+                                        <th class="text-center table-style">Name</th>
+                                        <th class="text-center table-style">Email</th>
+                                        <th class="text-center table-style">DoB</th>
+                                        <th class="text-center table-style">City</th>
+                                        <th class="text-center table-style">Country</th>
+                                        <th class="text-center table-style">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var data in Model)
+                                        {
+                                            <tr class="text-center">
+                                                <td hidden>@data.UserId</td>
+                                                <td>@data.UserName</td>
+                                                <td>@data.Email</td>
+                                                <td>@data.DoB</td>
+                                                <td>@data.CityName</td>
+                                                <td>@data.CountryName</td>
+                                                <td>
+                                                    <a href="/User/Edit/@data.UserId">Edit</a>
+                                                    <a href="/User/Delete/@data.UserId">Delete</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
